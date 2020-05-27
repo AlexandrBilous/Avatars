@@ -1,0 +1,16 @@
+/* 
+  Localizable.strings
+  AvatarsGreed
+
+  Created by Marentilo on 27.05.2020.
+  Copyright © 2020 Marentilo. All rights reserved.
+*/
+"list" = "Таблица";
+"grid" = "Сетка";
+"changes" = "Симуляция изменений";
+"back" = "Назад";
+"online" = "В сети";
+"offline" = "Вне сети";
+"noInternet" = "Нет соединения с интернетом";
+"tryLater" = "Пожалуйста, проверьте подключение к сети или повторите попытку позже.";
+"cancel" = "Закрыть.";
