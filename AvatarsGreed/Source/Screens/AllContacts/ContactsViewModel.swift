@@ -13,6 +13,8 @@ protocol ContactsViewModel {
     var usersCount : Int { get }
     /// Calback if users list has changes
     var usersListDidChange : (() -> Void)? { get set}
+    ///
+    var didFailLoad : (() -> Void)? { get set}
     /// Show new controller with given gavatar
     func showAvatarDelails(for indexPath: IndexPath, originFrame : CGRect)
     /// Generate changes in current model and fetch new gvatar accounts from network
@@ -39,6 +41,7 @@ final class ContactsViewModelImplemetation : ContactsViewModel {
         }
     }
     var usersListDidChange : (() -> Void)?
+    var didFailLoad : (() -> Void)?
     var usersCount : Int { users.count }
     weak var coordinator : AppCoordinator?
     
@@ -65,7 +68,9 @@ final class ContactsViewModelImplemetation : ContactsViewModel {
                     let user = User(gvatarProfile: gvatarUser, email: value)
                     self?.users.append(user)
                 }) { [weak self] (error) in
-                    UIApplication.showAlert(title: Strings.noInternet , message: Strings.tryLater, cancel: Strings.cancel)
+                    if let callback = self?.didFailLoad {
+                        callback()
+                    }
                     self?.batchCount -= 1
                 }
             })
@@ -83,8 +88,10 @@ final class ContactsViewModelImplemetation : ContactsViewModel {
     func imageForIndex(_ index : Int, onSuccess : @escaping (UIImage?) -> Void) {
         networkService.fetchGvatarImage(with: users[index].email, onSuccess: { (image) in
             onSuccess(image)
-        }) { (error) in
-            UIApplication.showAlert(title: Strings.noInternet , message: Strings.tryLater, cancel: Strings.cancel)
+        }) { [weak self] (error) in
+            if let callback = self?.didFailLoad {
+                callback()
+            }
         }
     }
     

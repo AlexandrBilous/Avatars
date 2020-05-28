@@ -59,6 +59,13 @@ final class ContactsViewController : UIViewController {
             self.updateCollections()
             self.activityIndicator.stopAnimating()
         }
+        
+        viewModel.didFailLoad = { [weak self] in
+            guard let self = self else { return }
+            self.activityIndicator.stopAnimating()
+            self.segmentedController.isEnabled = true
+            UIApplication.showAlert(title: Strings.noInternet, message: Strings.tryLater, cancel: Strings.cancel)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
